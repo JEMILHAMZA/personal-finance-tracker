@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dashboard - Budget Tracker</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="static/assets/img/favicon.png" rel="icon">
+  <link href="static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Vendor CSS Files -->
+  <link href="static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="static/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="static/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="static/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="static/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="static/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="static/assets/css/style.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{{url_for('dashboard')}}" class="logo d-flex align-items-center">
+        <img src="static/assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">Budget Tracker</span>
+      </a>
+      <!-- <i class="bi bi-list toggle-sidebar-btn"></i> -->
+    </div><!-- End Logo -->
+
+    
+
+   
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+         <li class="nav-item dropdown pe-3">
+            <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+               <!-- Display avatar image -->
+               <img src="{{ current_user.avatar_url if current_user.avatar_url else url_for('static', filename='assets/img/profile-avatar.jpg') }}" alt="Profile" class="rounded-circle">
+               <span class="d-none d-md-block dropdown-toggle ps-2">{{ current_user.username }}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+               <li class="dropdown-header">
+                  
+                  <span>{{ current_user.email }}</span>
+               </li>
+               <li><hr class="dropdown-divider"></li>
+               <li>
+                  <a class="dropdown-item d-flex align-items-center" href="{{url_for('profile')}}">
+                     <i class="bi bi-person"></i>
+                     <span>My Profile</span>
+                  </a>
+               </li>
+               <li><hr class="dropdown-divider"></li>
+               <li>
+                  <a class="dropdown-item d-flex align-items-center" href="{{url_for('logout')}}">
+                     <i class="bi bi-box-arrow-right"></i>
+                     <span>Sign Out</span>
+                  </a>
+               </li>
+            </ul>
+         </li>
+      </ul>
+   </nav>
+   <!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+  
+
+  <main id="main" class="main">
+
+    {% extends "base.html" %}
+              {% block content %}
+   
+    <section class="section dashboard">
+      <div class="row">
+          <!-- Left side columns -->
+          <div class="col-lg-8">
+              <div class="row">
+  
+                  <!-- Income Card -->
+                  <div class="col-xxl-4 col-md-6">
+                      <div class="card info-card sales-card">
+                          <div class="card-body">
+                              <h5 class="card-title">Create Income</h5>
+                              <form method="POST" action="/add_income">
+                                  <label for="income-name">Income Name</label>
+                                  <input type="text" id="income-name" name="income_name" required>
+  
+                                  <label for="income-amount">Amount</label>
+                                  <input type="number" id="income-amount" name="income_amount" required>
+  
+                                  <button type="submit">
+                                      <i class="fas fa-plus"></i> Add Income
+                                  </button>
+                              </form>
+                          </div>
+                      </div>
+                  </div><!-- End income Card -->
+  
+                  <!-- Budget Card -->
+                  <div class="col-xxl-4 col-md-6">
+                      <div class="card info-card revenue-card">
+                          <div class="card-body">
+                              <h5 class="card-title">Create Budget</h5>
+                              <form method="POST" action="/add_budget">
+                                  <label for="budget-name">Budget Name</label>
+                                  <input type="text" id="budget-name" name="budget_name" required>
+  
+                                  <label for="budget-amount">Amount</label>
+                                  <input type="number" id="budget-amount" name="budget_amount" required>
+  
+                                  <button type="submit">
+                                      <i class="fas fa-dollar-sign"></i> Add Budget
+                                  </button>
+                              </form>
+                          </div>
+                      </div>
+                  </div><!-- End budget Card -->
+  
+                  <!-- Expense Card -->
+                  <div class="col-xxl-4 col-xl-12">
+                      <div class="card info-card customers-card">
+                          <div class="card-body">
+                              <h5 class="card-title">Add Expenses</h5>
+                              <form method="POST" action="/add_expense">
+                                  <label for="expense-name">Expense Name</label>
+                                  <input type="text" id="expense-name" name="expense_name" required>
+  
+                                  <label for="expense-amount">Amount</label>
+                                  <input type="number" id="expense-amount" name="expense_amount" required>
+  
+                                  <label for="budget-category">Budget Category</label>
+                                  <select id="budget-category" name="budget_category" required>
+                                      <option value="">Select Category</option>
+                                     
+                                      {% for category in categories %}
+                                          <option value="{{ category }}">{{ category }}</option>
+                                      {% endfor %}
+                                      
+                                  </select>
+  
+                                  <button type="submit">
+                                      <i class="fas fa-file-invoice"></i> Add Expense
+                                  </button>
+                              </form>
+                          </div>
+                      </div>
+                  </div><!-- End expense Card -->
+        
+  
+
+
+        <!-- Income Card (Add "Edit" button in each income card) -->
+        <div class="col-12">
+          <div class="card existing-income">
+            <div class="card-body">
+              <h5 class="card-title">Existing Incomes</h5>
+              <div class="income-data">
+                <p>Total Income: ${{ total_income }}</p>
+              <p>Allocated Income: ${{ allocated_income }}</p>
+              <p>Remaining Income: ${{ remaining_income }}</p>
+              </div>
+              
+        
+             <!-- Delete Confirmation Modal -->
+
+<!-- Income Card -->
+<div class="row">
+  {% for income in incomes %}
+    <div class="col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title">{{ income.source }}</h6>
+          <p>Amount: ${{ income.amount }}</p>
+          <button class="btn btn-primary" onclick="openEditModal('{{ income._id }}', '{{ income.source }}', '{{ income.amount }}')">Edit</button>
+          <button class="btn btn-danger mx-3" onclick="confirmDeleteIncome('{{ income._id }}')">Delete</button>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>No incomes found.</p>
+  {% endfor %}
+</div>
+
+              
+            </div>
+          </div>
+        </div>
+    
+        
+ <!-- Delete Income Confirmation Modal -->
+<div id="deleteIncomeModal" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this income?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn " data-bs-dismiss="modal" style="color: blue;">Cancel</button>
+        <form id="deleteIncomeForm" action="" method="POST">
+          <button type="submit" class="btn " style="background-color: transparent; color: red; border: none;">Delete</button>
+        </form>
+      </div>
+
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Edit Income Modal -->
+<div id="editIncomeModal" class="modal" style="display:none;">
+  <div class="modal-content">
+      <span onclick="closeEditModal()" class="close">&times;</span>
+      <h5>Edit Income</h5>
+      <form id="editIncomeForm" action="/edit_income" method="POST"> <!-- Specify action here -->
+          <input type="hidden" name="income_id" id="edit-income-id">
+          <label for="edit-income-name">Income Name:</label>
+          <input type="text" id="edit-income-name" name="income_name" required>
+          <label for="edit-income-amount">Amount:</label>
+          <input type="number" id="edit-income-amount" name="income_amount" required>
+          <button type="submit">Save Changes</button>
+      </form>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="col-12">
+  <div class="card recent-sales overflow-auto">
+      <div class="card-body">
+          <h5 class="card-title">Existing Budgets</h5>
+          
+
+
+
+          <div class="row">
+            {% for budget in budgets %}
+              <div class="col-md-6 mb-4">
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title">{{ budget.name }}</h6>
+                    <p>Total Amount: ${{ budget.amount }}</p>
+                    <p>Spent Amount: ${{ budget.spent_amount }}</p>
+                    <p>Remaining Amount: ${{ budget.remaining_amount }}</p>
+                    <button class="btn btn-primary" onclick="openEditBudgetModal('{{ budget.id }}', '{{ budget.name }}', '{{ budget.amount }}')">Edit</button>
+                    <button class="btn btn-danger mx-3" onclick="openDeleteBudgetModal('{{ budget.id }}')">Delete</button>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <p>No Budgets found.</p>
+            {% endfor %}
+          </div>
+          
+      </div>
+  </div>
+</div>
+
+
+
+<!-- Confirmation Modal for Budget Deletion -->
+<div id="deleteBudgetModal" class="modal">
+  <div class="modal-content">
+    <h4>Delete Budget</h4>
+    <p>After deleting this budget, you will need to edit or change all expenses associated with this category to another budget category. Are you sure you want to continue?</p>
+    <div class="modal-footer">
+      <button class="btn " onclick="closeModal()" style="color: blue;">Cancel</button>
+      <button class="btn red" onclick="confirmDeleteBudget()" style="color: red;">Delete</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Edit Budget Modal -->
+<div id="editBudgetModal" class="modal" style="display:none;">
+  <div class="modal-content">
+      <span onclick="closeEditBudgetModal()" class="close">&times;</span>
+      <h5>Edit Budget</h5>
+      <form id="editBudgetForm" action="/edit_budget" method="POST">
+          <input type="hidden" name="budget_id" id="edit-budget-id">
+          <label for="edit-budget-name">Budget Name:</label>
+          <input type="text" id="edit-budget-name" name="budget_name" required>
+          <label for="edit-budget-amount">Amount:</label>
+          <input type="number" id="edit-budget-amount" name="budget_amount" required>
+          
+          <button type="submit" class="btn btn-primary">Save changes</button>
+      </form>
+  </div>
+</div>
+
+
+            <!-- Expenses Section -->
+<div class="col-12">
+  <div class="card top-selling overflow-auto">
+      <div class="card-body pb-0">
+          <h5 class="card-title">Recent Expenses</h5>
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>Expense Name</th>
+                      <th>Amount</th>
+                      <th>Created Date</th>
+                      <th>Category</th>
+                      <th>Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for expense in expenses %}
+                  <tr>
+                      <td>{{ expense.name }}</td>
+                      <td>{{ expense.amount }}</td>
+                      <td>{{ expense.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td> <!-- formatted output -->
+
+                      <td>{{ expense.category }}</td>
+                      <td>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editExpenseModal" 
+                                data-expense-id="{{ expense._id }}" data-expense-name="{{ expense.name }}" 
+                                data-expense-amount="{{ expense.amount }}" data-expense-category="{{ expense.category }}">
+                          Edit
+                        </button>
+                        <button class="btn btn-danger btn-sm mx-3" onclick="confirmDeleteExpense('{{ expense._id }}')">Delete</button>
+                      </td>
+                      
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteExpenseModal" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this expense?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn " data-bs-dismiss="modal" style="color: blue;">Cancel</button>
+        <form id="deleteExpenseForm" action="" method="POST">
+          <button type="submit" class="btn " style="background-color: transparent; color: red; border: none;">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Expense Modal -->
+<div class="modal fade" id="editExpenseModal" tabindex="-1" aria-labelledby="editExpenseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <form action="{{ url_for('edit_expense') }}" method="post">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="editExpenseModalLabel">Edit Expense</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <input type="hidden" name="expense_id" id="expenseId">
+                  <div class="mb-3">
+                      <label for="expenseName" class="form-label">Expense Name</label>
+                      <input type="text" class="form-control" id="expenseName" name="expense_name" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="expenseAmount" class="form-label">Amount</label>
+                      <input type="number" class="form-control" id="expenseAmount" name="expense_amount" required>
+                  </div>
+                  <div class="mb-3">
+                      
+
+
+                      <label for="expenseCategory" class="form-label">Category</label>
+                      <select id="expenseCategory" name="expense_category" required>
+                          <option value="">Select Category</option>
+                          
+                          {% for category in categories %}
+                              <option value="{{ category }}">{{ category }}</option>
+                          {% endfor %}
+                          
+                      </select>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                 
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+          </div>
+      </form>
+  </div>
+</div>
+
+
+
+
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+
+          <!-- Recent Activity -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            <div class="card-body">
+              <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+
+              <div class="activity">
+                {% for activity in recent_activities %}
+                <div class="activity-item d-flex">
+                  <div class="activite-label">
+                    {{ activity.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                  </div>
+                  <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                  <div class="activity-content">
+                    {{ activity.action | capitalize }} {{ activity.item_type }}:
+                    <a href="#" class="fw-bold text-dark">{{ activity.item_name }}</a>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              
+
+            </div>
+          </div><!-- End Recent Activity -->
+
+          <!-- Budget Report -->
+          <div class="card">
+            
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">Budget Report </h5>
+          
+              <div id="budgetChart" style="min-height: 400px;" class="echart"></div>
+          
+              <script>
+                  document.addEventListener("DOMContentLoaded", () => {
+                      budgets = {{ budgets|tojson }};  // Convert budgets to JSON format
+          
+                      const budgetNames = budgets.map(b => b.name);
+                      const totalAmounts = budgets.map(b => b.amount);
+                      const spentAmounts = budgets.map(b => b.spent_amount);
+                      const remainingAmounts = budgets.map(b => b.remaining_amount);
+          
+                      var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
+                          legend: {
+                              data: ['Allocated Budget', 'Actual Spending', 'Remaining Budget']
+                          },
+                          radar: {
+                              indicator: budgetNames.map(name => ({
+                                  name: name,
+                                  max: Math.max(...totalAmounts)
+                              })),
+                              center: ['50%', '55%'],  // Adjusts the vertical position of the radar chart
+                          },
+                          series: [{
+                              name: 'Budget vs Spending',
+                              type: 'radar',
+                              data: [{
+                                  value: totalAmounts,
+                                  name: 'Allocated Budget'
+                              },
+                              {
+                                  value: spentAmounts,
+                                  name: 'Actual Spending'
+                              },
+                              {
+                                  value: remainingAmounts,
+                                  name: 'Remaining Budget'
+                              }]
+                          }]
+                      });
+                  });
+              </script>
+          </div>
+          
+          
+          </div><!-- End Budget Report -->
+
+          <!-- Website Traffic -->
+          <div class="card">
+            
+
+            <div class="card-body pb-0">
+              <h5 class="card-title">Expense Breakdown </h5>
+          
+              <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+          
+              <script>
+                  document.addEventListener("DOMContentLoaded", () => {
+                      // Fetch expense data dynamically passed from Flask
+                      const expenses = {{ expenses | tojson }};
+                      
+                      // Prepare data for the pie chart
+                      const chartData = expenses.map(expense => ({
+                          value: expense.amount,
+                          name: expense.name
+                      }));
+          
+                      echarts.init(document.querySelector("#trafficChart")).setOption({
+                          tooltip: {
+                              trigger: 'item'
+                          },
+                          legend: {
+                              top: '5%',
+                              left: 'center'
+                          },
+                          series: [{
+                              name: 'Expenses',
+                              type: 'pie',
+                              radius: ['40%', '70%'],
+                              avoidLabelOverlap: false,
+                              label: {
+                                  show: false,
+                                  position: 'center'
+                              },
+                              emphasis: {
+                                  label: {
+                                      show: true,
+                                      fontSize: '18',
+                                      fontWeight: 'bold'
+                                  }
+                              },
+                              labelLine: {
+                                  show: false
+                              },
+                              data: chartData  // Use dynamically generated chart data
+                          }]
+                      });
+                  });
+              </script>
+          </div>
+          
+          </div><!-- End Website Traffic -->
+
+          <!-- News & Updates Traffic -->
+          <div class="card">
+            <div class="filter">
+              <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <li class="dropdown-header text-start">
+                  <h6>Filter</h6>
+                </li>
+
+                <li><a class="dropdown-item" href="#">Today</a></li>
+                <li><a class="dropdown-item" href="#">This Month</a></li>
+                <li><a class="dropdown-item" href="#">This Year</a></li>
+              </ul>
+            </div>
+
+            
+
+        </div><!-- End Right side columns -->
+
+      </div>
+    </section>
+
+    
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Budget Tracker</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+     
+      Designed by <a href="https://jemil-shikuri.vercel.app/" target="_blank" rel="noopener noreferrer">Jemil</a>
+
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="static/assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="static/assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="static/assets/vendor/echarts/echarts.min.js"></script>
+  <script src="static/assets/vendor/quill/quill.js"></script>
+  <script src="static/assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="static/assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="static/assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="static/assets/js/main.js"></script>
+
+</body>
+
+</html>
+
+{% endblock %}

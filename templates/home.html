@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker</title>
+
+
+   
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+  
+    <!-- Favicons -->
+    <link href="static/assets/img/favicon.png" rel="icon">
+    <link href="static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    
+    <!-- Template Main CSS File -->
+  <link href="static/assets/css/home-style.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <!-- <a href="{{ url_for('home') }}" class="logo d-flex align-items-center w-auto"> -->
+        <div class="logo">
+            <img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="Logo">
+        </div>
+        <div class="brand-name">Bduget Tracker</div>
+    <!-- </a> -->
+    </header>
+    <main>
+        <div class="content">
+           
+            <div class="motto">
+                <h2>Take Control Of <span>Your Money</span></h2>
+                <p>Welcome to our application. Our mission is to provide you with a reliable platform for managing your finances effectively.</p>
+                
+
+                <div class="actions">
+                    <a href="{{ url_for('login') }}" class="btn btn-primary w-100">Login</a>
+                   
+                    <a href="{{ url_for('register') }}" class="btn">Sign Up</a>
+                </div>
+            </div>
+            <div class="side-image">
+                <img src="{{ url_for('static', filename='assets/img/bm2.png') }}" alt="Side Image">
+            </div>
+
+
+
+           
+            
+        </div>
+        
+    </main>
+</body>
+</html>
